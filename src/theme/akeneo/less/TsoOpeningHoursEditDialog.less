@@ -1,0 +1,133 @@
+
+.TsoOpeningHoursSpecificationEditDialog {
+  width: 600px;
+  padding: 0;
+  border: 1px solid #ccc;
+  box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0.1);
+
+  &__Actionbar {
+    background-color: #F9F9FB;
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+    justify-content: end;
+    border-bottom: 1px solid #ccd1d8;
+  }
+
+  .TsoOpeningHoursSpecificationEditDialogInvalidData {
+    .TsoOpeningHoursSpecificationEditDialogInvalidDataJsonField {
+      position: relative;
+
+      textarea {
+        margin-right: 0;
+        border: none;
+        font-family: monospace;
+        width: 100%;
+        padding: 10px;
+        resize: none;
+
+        &:focus, &:active {
+          outline: none;
+        }
+      }
+
+      &::after {
+        position: absolute;
+        content: attr(data-error-text);
+        top: 5px;
+        right: 5px;
+        background-color: #D4604F;
+        padding: 2px 5px;
+        border-radius: 3px;
+        color: white;
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.1s ease-in, visibility 0s ease-in 0.1s;
+      }
+
+      &--error {
+        &::after {
+          opacity: 1;
+          visibility: visible;
+          transition: opacity 0.1s ease-in, visibility 0s ease-in 0s;
+        }
+      }
+    }
+  }
+
+  .TsoOpeningHoursSpecificationEditDialogValidData {
+    table.TsoOpeningHours__Weekdays {
+      width: 100%;
+
+      tr.TsoOpeningHours__Weekday {
+        > td {
+          padding: 15px;
+          vertical-align: top;
+        }
+
+        .TsoOpeningHours__Weekday__Headline {
+          margin-bottom: 0.7em;
+          font-size: 1.2em;
+          color: #191919;
+          text-transform: uppercase;
+        }
+
+        .TsoOpeningHours__Weekday__Entries {
+          width: 100%;
+
+          th {
+            text-align: left;
+          }
+
+          td {
+            vertical-align: top;
+          }
+        }
+      }
+    }
+
+    .TsoOpeningHours__SpecificEntries {
+      width: 100%;
+      padding: 15px;
+
+      .TsoOpeningHours__SpecificEntry {
+        background-color: #F9F9FB;
+        border-radius: 5px;
+        border: 1px solid #ccd1d8;
+        margin-bottom: 15px;
+
+        &__Headline {
+          background-color: #F9F9FB;
+          padding: 15px 15px 0 15px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          > div:first-child {
+            margin-bottom: 0.7em;
+            font-size: 1.2em;
+            color: #191919;
+            text-transform: uppercase;
+          }
+
+          > div:last-child {
+            line-height: 0;
+          }
+        }
+
+        &__Settings {
+          width: 100%;
+          padding: 15px;
+        }
+
+        &__OpenSwitch {
+          padding: 14px 0;
+        }
+      }
+    }
+
+    td {
+      vertical-align: top;
+    }
+  }
+}

@@ -1,0 +1,221 @@
+/**
+ * Form Fields
+ */
+.TsoOpeningHours__Field {
+  padding: 0 8px;
+  height: 34px;
+  line-height: 34px;
+}
+
+.TsoOpeningHours__TextareaField {
+  padding: 8px;
+  resize: vertical;
+}
+
+.TsoOpeningHours__Field,
+.TsoOpeningHours__TextareaField {
+  border: 1px solid #ccd1d8;
+  border-radius: 2px;
+
+  &--error {
+    border-color: red;
+  }
+
+  &__error {
+    color: red;
+    font-size: 0.8em;
+  }
+
+  &__Label {
+    font-weight: bold;
+  }
+}
+
+/**
+ * Icon Buttons
+ */
+.TsoOpeningHours__IconButton {
+  cursor: pointer;
+  color: #ccd1d8;
+  width: 34px;
+  height: 34px;
+  line-height: 34px;
+  font-size: 0;
+  border: none;
+  display: inline-block;
+  padding: 0;
+  border-radius: 2px;
+  text-align: center;
+  transition: background 0.1s ease, color 0.1s ease, opacity 0.1s ease-in;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 20px;
+  opacity: 0.8;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &__Add {
+    background-image: url(/bundles/pimui/images/icon-plus.svg);
+  }
+
+  &__Remove {
+    background-image: url(/bundles/pimui/images/icon-trash.svg);
+  }
+}
+
+/**
+ * Switch
+ */
+.TsoOpeningHours__Switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 25px;
+  cursor: pointer;
+
+  > input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+
+    &:checked + span {
+      background-color: #2196F3;
+
+      &:before {
+        transform: translateX(20px);
+      }
+    }
+
+    &:focus + span {
+      box-shadow: 0 0 1px #2196F3;
+    }
+  }
+
+  > span {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    border-radius: 25px;
+
+    &:before {
+      position: absolute;
+      content: "";
+      height: 19px;
+      width: 19px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      border-radius: 50%;
+    }
+  }
+
+  + .TsoOpeningHours__Switch__Label {
+    display: inline-block;
+    margin-left: 10px;
+    height: 25px;
+    line-height: 25px;
+  }
+}
+
+/**
+ * Buttons
+ */
+.TsoOpeningHours__Button {
+  background-color: white;
+  color: #67768A;
+  height: 32px;
+  line-height: 30px;
+  font-size: 15px;
+  min-width: 32px;
+  display: inline-block;
+  padding: 0 16px;
+  border-radius: 100px;
+  border: 1px solid #ccd1d8;
+  cursor: pointer;
+  text-align: left;
+  white-space: nowrap;
+  transition: background 0.1s ease, color 0.1s ease, border-color 0.1s ease;
+  position: relative;
+  text-transform: uppercase;
+
+  &--small {
+    height: 24px;
+    line-height: 22px;
+    font-size: 13px;
+    padding: 0 15px;
+  }
+
+  &--block {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+
+  &[disabled] {
+    cursor: not-allowed;
+    color: #ccd1d8;
+    border-color: #ccd1d8;
+  }
+
+  &:not([disabled]):hover {
+    background: #F9F9FB;
+  }
+
+  &--primary {
+    background-color: #67b373;
+    border-color: #67b373;
+    color: white;
+
+    &[disabled] {
+      background-color: #ccd1d8;
+      border-color: #ccd1d8;
+      color: white;
+    }
+
+    &:not([disabled]):hover {
+      background-color: #4d9a59;
+      border-color: #4d9a59;
+    }
+  }
+}
+
+.TsoOpeningHours__CloseButton {
+  background: none;
+  border: none;
+  height: 32px;
+  width: 32px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    color: #11324d;
+    background-color: #f6f7fb;
+    border-color: #67768a;
+  }
+}
+
+.TsoOpeningHoursDisplay,
+.TsoOpeningHoursSpecificationEditDialog {
+  td {
+    &.min-width {
+      width: 1px;
+      white-space: nowrap;
+    }
+
+    &.align-center {
+      vertical-align: middle;
+    }
+
+    &.align-right {
+      text-align: right;
+    }
+  }
+}

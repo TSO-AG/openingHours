@@ -1,0 +1,164 @@
+@odd-background-color: #F9F9FB;
+@border-color: #ccd1d8;
+@danger-color: #D4604F;
+
+.TsoOpeningHoursDisplay {
+  width: 100%;
+  border: 1px solid @border-color;
+
+  position: relative;
+  overflow: hidden;
+  margin-right: 4px;
+  margin-bottom: 4px;
+  background: white;
+
+  &--localizable {
+    width: calc(100% - 4px);
+    position: relative;
+  }
+
+  &--readonly {
+    background-color: #F9F9FB;
+  }
+
+  &__ActionBar {
+    background-color: #F9F9FB;
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+    justify-content: end;
+    border-bottom: 1px solid @border-color;
+  }
+
+  &__Content {
+  }
+
+  &__InvalidData {
+    padding: 30px;
+    color: @danger-color;
+    text-align: center;
+  }
+
+  &__ValidData {
+    table.TsoOpeningHours__Weekdays {
+      width: 100%;
+      border-collapse: collapse;
+
+      > tbody > tr {
+        &:nth-child(even) {
+          background-color: @odd-background-color;
+        }
+
+        > td {
+          padding: 10px;
+          vertical-align: top;
+
+          &:first-child {
+            padding-left: 30px;
+          }
+
+          &:last-child {
+            padding-right: 30px;
+          }
+        }
+      }
+
+      tr.TsoOpeningHours__Weekday {
+        .TsoOpeningHours__Weekday__Label {
+          font-size: 1.1em;
+        }
+
+        .TsoOpeningHours__Weekday__OpeningHours {
+          text-align: right;
+
+          &__Opens,
+          &__Closes {
+            //font-size: 1.1em;
+          }
+
+          &__To {
+            font-size: 0.9em;
+            padding: 0 5px;
+          }
+        }
+
+        .TsoOpeningHours__Weekday__OpeningHoursClosed {
+        }
+      }
+    }
+
+    .TsoOpeningHours__SpecificEntriesLabel {
+      background: #F9F9FB;
+      border-top: 1px solid @border-color;
+      border-bottom: 1px solid @border-color;
+      text-align: center;
+      padding: 10px;
+    }
+
+    .TsoOpeningHours__SpecificEntries {
+      .TsoOpeningHours__SpecificEntry {
+        padding: 20px 30px;
+
+        &:nth-child(even) {
+          background-color: @odd-background-color;
+        }
+
+        &__SplitView {
+          display: flex;
+          justify-content: space-between;
+        }
+
+        .TsoOpeningHours__SpecificEntry__ValidFromThrough {
+          &__ValidFrom,
+          &__ValidThrough {
+            //font-size: 1.1em;
+          }
+          &__To {
+            font-size: 0.9em;
+            padding: 0 5px;
+          }
+
+          .TsoOpeningHours__SpecificEntry__DayOfWeek {
+            font-size: 1.1em;
+          }
+        }
+
+        .TsoOpeningHours__SpecificEntry__OpeningHours {
+          text-align: center;
+
+          &__Entries {
+          }
+
+          &__Entry {
+            &__Opens,
+            &__Closes {
+            }
+
+            &__To {
+              font-size: 0.9em;
+              padding: 0 5px;
+            }
+          }
+        }
+
+        .TsoOpeningHours__SpecificEntry__OpeningHoursClosed {
+        }
+
+        .TsoOpeningHours__SpecificEntry__NameDescription {
+          margin-top: 10px;
+          font-style: italic;
+          border-left: 3px solid;
+          padding-left: 10px;
+
+          .TsoOpeningHours__SpecificEntry__Name {
+            font-weight: bold;
+          }
+          .TsoOpeningHours__SpecificEntry__Description {
+            font-size: 0.9em;
+          }
+        }
+      }
+    }
+  }
+}
+
