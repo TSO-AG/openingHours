@@ -1,0 +1,5 @@
+{
+  "name": "@tso/opening-hours-widget",
+  "version": "0.0.1",
+  "main": "src/openingHoursWidget.js"
+}
