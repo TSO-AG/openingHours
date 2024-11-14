@@ -1,6 +1,7 @@
 const widgetTemplate = require('./templates/widgetTemplate.js');
 const widgetTemplateDialogInvalid = require('./templates/widgetTemplateDialogInvalid.js');
 const widgetTemplateDialog = require('./templates/widgetTemplateDialog.js');
+const translations = require('./translations');
 
 module.exports = {
     /**
@@ -8,48 +9,52 @@ module.exports = {
      * @param value
      * @param {boolean} readonly If the widget should be readonly
      * @param onChange
+     * @param {"de_DE"|"en_US"|"fr_FR"|"it_IT"} locale
+     * @param {boolean} editInvalidJson
      */
     initOpeningHoursWidget(el, {
         value,
         readonly,
-        onChange
+        onChange,
+        locale = 'en_US',
+        editInvalidJson = false
     } = {}) {
 
         const weekdays =  [
             {
                 key: 'monday',
                 value: 'https://schema.org/Monday',
-                label: 'monday'
+                labelKey: 'weekdays.monday'
             },
             {
                 key: 'tuesday',
                 value: 'https://schema.org/Tuesday',
-                label: 'tuesday'
+                labelKey: 'weekdays.tuesday'
             },
             {
                 key: 'wednesday',
                 value: 'https://schema.org/Wednesday',
-                label: 'wednesday'
+                labelKey: 'weekdays.wednesday'
             },
             {
                 key: 'thursday',
                 value: 'https://schema.org/Thursday',
-                label: 'thursday'
+                labelKey: 'weekdays.thursday'
             },
             {
                 key: 'friday',
                 value: 'https://schema.org/Friday',
-                label: 'friday'
+                labelKey: 'weekdays.friday'
             },
             {
                 key: 'saturday',
                 value: 'https://schema.org/Saturday',
-                label: 'saturday'
+                labelKey: 'weekdays.saturday'
             },
             {
                 key: 'sunday',
                 value: 'https://schema.org/Sunday',
-                label: 'sunday'
+                labelKey: 'weekdays.sunday'
             },
         ];
 
@@ -58,22 +63,16 @@ module.exports = {
         const render = () => {
             const isValid = isValidData(currentValue);
             const groupedEntries = isValid ? getGroupedEntriesForDisplay() : undefined;
-            const isAnyWeekdayConfigured = isValidData ? Object.values(groupedEntries).some((entries) => entries.length > 0) : false;
+            const isAnyWeekdayConfigured = isValid ? Object.values(groupedEntries).some((entries) => entries.length > 0) : false;
 
             el.innerHTML = widgetTemplate({
                 isValid,
                 isAnyWeekdayConfigured,
                 readonly,
-                labels: {
-                    edit: 'Edit',
-                    reset: 'Reset',
-                    invalidOpeningHours: 'Invalid opening hours',
-                    specificOpeningHours: 'Specific opening hours',
-                    to: 'to',
-                    closed: 'Closed'
-                },
+                translate,
                 weekdays,
                 groupedEntries,
+                editInvalidJson,
             })
 
             addEvent(el, 'button[data-action="editData"]', 'click', openEditModal);
@@ -137,20 +136,7 @@ module.exports = {
                     entries: workingData,
                     errorClass,
                     errorMessage,
-                    labels: {
-                        save: 'Speichern',
-                        weekday: 'Wochentag',
-                        validFrom: 'Gültig von',
-                        validThrough: 'Gültig bis',
-                        open: 'Geöffnet',
-                        closed: 'Geschlossen',
-                        opens: 'Öffnet',
-                        closes: 'Schließt',
-                        name: 'Name',
-                        description: 'Beschreibung',
-                        specificOpeningHour: 'Spezifische Öffnungszeit',
-                        addSpecificEntry: 'Spezifischen Eintrag hinzufügen',
-                    }
+                    translate,
                 });
 
                 // Weekday interactions
@@ -379,9 +365,7 @@ module.exports = {
 
             modal.innerHTML = widgetTemplateDialogInvalid({
                 json: JSON.stringify(currentValue, null, 4),
-                labels: {
-                    save: 'Speichern',
-                }
+                translate,
             });
 
             /** @var {HTMLTextAreaElement} */
@@ -534,6 +518,8 @@ module.exports = {
          * @returns {boolean}
          */
         const isValidData = (data) => {
+            return false;
+
             if (data === null || data === undefined) {
                 return true;
             }
@@ -687,8 +673,22 @@ module.exports = {
             }, {});
         };
 
+        const translate = (key) => {
+            const keyParts = key.split('.');
+            function findKeyInLocale (locale) {
+                return keyParts.reduce((acc, keyPart) => {
+                    if (acc === undefined) {
+                        return undefined;
+                    }
+
+                    return acc[keyPart];
+                }, translations[locale]);
+            }
+
+            return findKeyInLocale(locale) || key;
+        }
+
         render();
-        console.info("Hello from plugin!!!");
 
         return {
         }

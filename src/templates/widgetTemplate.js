@@ -1,17 +1,19 @@
-module.exports = ({ isValid, readonly, labels, weekdays, groupedEntries, isAnyWeekdayConfigured }) => `<div class="TsoOpeningHoursDisplay">
+module.exports = ({ isValid, isAnyWeekdayConfigured, readonly, translate, weekdays, groupedEntries, editInvalidJson }) => `<div class="TsoOpeningHoursDisplay">
     <!-- Actionbar -->
     ${ !readonly ? `
         <div class="TsoOpeningHoursDisplay__ActionBar">
             ${ isValid ? `
                 <button class="TsoOpeningHours__Button TsoOpeningHours__Button--small" data-action="editData">
-                    ${ labels.edit }
+                    ${ translate('view.edit') }
                 </button>
             ` : `
+                ${ editInvalidJson ? `
                 <button class="TsoOpeningHours__Button TsoOpeningHours__Button--small" data-action="editRawData">
-                    ${ labels.edit }
+                    ${ translate('view.edit') }
                 </button>
+                ` : '' }
                 <button class="TsoOpeningHours__Button TsoOpeningHours__Button--small" data-action="resetData">
-                    ${ labels.reset }
+                    ${ translate('view.reset') }
                 </button>
             ` }
         </div>
@@ -23,7 +25,7 @@ module.exports = ({ isValid, readonly, labels, weekdays, groupedEntries, isAnyWe
         ${ !isValid ? `
             <!-- Error in data -->
             <div class="TsoOpeningHoursDisplay__InvalidData">
-                ${ labels.invalidOpeningHours }
+                ${ translate('view.invalidOpeningHours') }
             </div>
         ` : `
             <!-- Valid data -->
@@ -35,7 +37,7 @@ module.exports = ({ isValid, readonly, labels, weekdays, groupedEntries, isAnyWe
                             ${ weekdays.map(weekday => `
                                 <tr class="TsoOpeningHours__Weekday">
                                     <td class="TsoOpeningHours__Weekday__Label">
-                                        ${ weekday.label }
+                                        ${ translate(weekday.labelKey) }
                                     </td>
                                     <td class="TsoOpeningHours__Weekday__OpeningHours">
                                         ${ groupedEntries[weekday.key].length > 0 ? `
@@ -45,7 +47,7 @@ module.exports = ({ isValid, readonly, labels, weekdays, groupedEntries, isAnyWe
                                                         ${ entry.opens ? entry.opens : '' }
                                                     </span>
                                                     <span class="TsoOpeningHours__Weekday__OpeningHours__To">
-                                                        ${ labels.to }
+                                                        ${ translate('view.to') }
                                                     </span>
                                                     <span class="TsoOpeningHours__Weekday__OpeningHours__Closes">
                                                         ${ entry.closes ? entry.closes : '' }
@@ -54,7 +56,7 @@ module.exports = ({ isValid, readonly, labels, weekdays, groupedEntries, isAnyWe
                                             `).join('') }
                                         ` : `
                                             <div class="TsoOpeningHours__Weekday__OpeningHoursClosed">
-                                                ${ labels.closed }
+                                                ${ translate('view.closed') }
                                             </div>
                                         ` }
                                     </td>
@@ -66,7 +68,7 @@ module.exports = ({ isValid, readonly, labels, weekdays, groupedEntries, isAnyWe
 
                 ${ Object.keys(groupedEntries.specific).length ? `
                 <div class="TsoOpeningHours__SpecificEntriesLabel">
-                    ${ labels.specificOpeningHours }
+                    ${ translate('view.specificOpeningHours') }
                 </div>
 
                 <!-- Specific entries -->
@@ -84,7 +86,7 @@ module.exports = ({ isValid, readonly, labels, weekdays, groupedEntries, isAnyWe
                                             ${ group.validFrom ? group.validFrom : '' }
                                         </span>
                                         <span class="TsoOpeningHours__SpecificEntry__ValidFromThrough__To">
-                                            ${ labels.to }
+                                            ${ translate('view.to') }
                                         </span>
                                         <span class="TsoOpeningHours__SpecificEntry__ValidFromThrough__ValidThrough">
                                             ${ group.validThrough ? group.validThrough : '' }
@@ -109,7 +111,7 @@ module.exports = ({ isValid, readonly, labels, weekdays, groupedEntries, isAnyWe
                                                         ${ entry.opens ? entry.opens : '' }
                                                     </span>
                                                     <span class="TsoOpeningHours__SpecificEntry__OpeningHours__To">
-                                                        ${ labels.to }
+                                                        ${ translate('view.to') }
                                                     </span>
                                                     <span class="TsoOpeningHours__SpecificEntry__OpeningHours__Closes">
                                                         ${ entry.closes ? entry.closes : '' }
@@ -119,7 +121,7 @@ module.exports = ({ isValid, readonly, labels, weekdays, groupedEntries, isAnyWe
                                         </div>
                                     ` : `
                                         <div class="TsoOpeningHours__SpecificEntry__OpeningHoursClosed">
-                                            ${ labels.closed }
+                                            ${ translate('view.closed') }
                                         </div>
                                     ` }
                                 </div>

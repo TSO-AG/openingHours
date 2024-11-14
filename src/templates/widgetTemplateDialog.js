@@ -1,9 +1,9 @@
-module.exports = ({ labels, weekdays, today, entries, errorClass, errorMessage }) => `<div class="TsoOpeningHoursSpecificationEditDialogValidData">
+module.exports = ({ weekdays, today, entries, errorClass, errorMessage, translate }) => `<div class="TsoOpeningHoursSpecificationEditDialogValidData">
 
     <!-- Actionbar -->
     <div class="TsoOpeningHoursSpecificationEditDialog__Actionbar">
         <button class="TsoOpeningHours__Button TsoOpeningHours__Button--primary" data-action="save">
-            ${ labels.save }
+            ${ translate('editValid.save') }
         </button>
         <button class="TsoOpeningHours__CloseButton" data-action="close">
             <svg viewBox="0 0 24 24" width="20" height="20"><g fill-rule="nonzero" stroke="currentColor" fill="none" stroke-linecap="round"><path d="M4 4l16 16M20 4L4 20"></path></g></svg>
@@ -17,7 +17,7 @@ module.exports = ({ labels, weekdays, today, entries, errorClass, errorMessage }
             ${ weekdays.map(weekday => `
                 <tr class="TsoOpeningHours__Weekday" data-day-of-week="${ weekday.key }">
                     <td class="min-width">
-                        <div class="TsoOpeningHours__Weekday__Headline">${ weekday.label }</div>
+                        <div class="TsoOpeningHours__Weekday__Headline">${ translate(weekday.labelKey) }</div>
                         <label class="TsoOpeningHours__Switch">
                             <input type="checkbox" name="closed" data-action="toggleWeekday"
                             ${ entries[weekday.key].length ? 'checked' : '' }
@@ -25,15 +25,15 @@ module.exports = ({ labels, weekdays, today, entries, errorClass, errorMessage }
                             <span></span>
                         </label>
                         <span class="TsoOpeningHours__Switch__Label">
-                            ${ entries[weekday.key].length === 0 ? labels.closed : labels.open }
+                            ${ entries[weekday.key].length === 0 ? translate('editValid.closed') : translate('editValid.open') }
                         </span>
                     </td>
                     <td>
                         ${ entries[weekday.key].length > 0 ? `
                             <table class="TsoOpeningHours__Weekday__Entries">
                                 <tr>
-                                    <th>${ labels.opens }</th>
-                                    <th>${ labels.closes }</th>
+                                    <th>${ translate('editValid.opens') }</th>
+                                    <th>${ translate('editValid.closes') }</th>
                                     <th></th>
                                 </tr>
                                 ${ entries[weekday.key].map(({ data: entry }, index) => `
@@ -81,7 +81,7 @@ module.exports = ({ labels, weekdays, today, entries, errorClass, errorMessage }
                 <!-- Headline -->
                 <div class="TsoOpeningHours__SpecificEntry__Headline">
                     <div>
-                        ${ labels.specificOpeningHour }
+                        ${ translate('editValid.specificOpeningHour') }
                     </div>
                     <div>
                     <button class="TsoOpeningHours__IconButton TsoOpeningHours__IconButton__Remove"
@@ -94,7 +94,7 @@ module.exports = ({ labels, weekdays, today, entries, errorClass, errorMessage }
                         <tr>
                             <td>
                                 <div class="TsoOpeningHours__Field__Label">
-                                    ${ labels.weekday }
+                                    ${ translate('editValid.weekday') }
                                 </div>
                                 <select name="dayOfWeek"
                                         class="TsoOpeningHours__Field"
@@ -106,14 +106,14 @@ module.exports = ({ labels, weekdays, today, entries, errorClass, errorMessage }
                                                 value="${ weekday.value }"
                                                 ${ group.dayOfWeek === weekday.value ? 'selected' : '' }
                                         >
-                                            ${ weekday.label }
+                                            ${ translate(weekday.labelKey) }
                                         </option>
                                     `).join('') }
                                 </select>
                             </td>
                             <td>
                                 <div class="TsoOpeningHours__Field__Label">
-                                    ${ labels.validFrom }
+                                    ${ translate('editValid.validFrom') }
                                 </div>
                                 <input
                                         name="validFrom"
@@ -128,7 +128,7 @@ module.exports = ({ labels, weekdays, today, entries, errorClass, errorMessage }
                             </td>
                             <td>
                                 <div class="TsoOpeningHours__Field__Label">
-                                    ${ labels.validThrough }
+                                    ${ translate('editValid.validThrough') }
                                 </div>
                                 <input
                                         name="validThrough"
@@ -152,7 +152,7 @@ module.exports = ({ labels, weekdays, today, entries, errorClass, errorMessage }
                                     <span></span>
                                 </label>
                                 <span class="TsoOpeningHours__Switch__Label">
-                                    ${ group.closed ? labels.closed : labels.open }
+                                    ${ group.closed ? translate('editValid.closed') : translate('editValid.open') }
                                 </span>
                             </td>
                             <td colspan="2">
@@ -160,8 +160,8 @@ module.exports = ({ labels, weekdays, today, entries, errorClass, errorMessage }
                                     <table style="width: 100%">
                                         <thead>
                                         <tr>
-                                            <th class="TsoOpeningHours__Field__Label">${ labels.opens }</th>
-                                            <th class="TsoOpeningHours__Field__Label">${ labels.closes }</th>
+                                            <th class="TsoOpeningHours__Field__Label">${ translate('editValid.opens') }</th>
+                                            <th class="TsoOpeningHours__Field__Label">${ translate('editValid.closes') }</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -211,7 +211,7 @@ module.exports = ({ labels, weekdays, today, entries, errorClass, errorMessage }
                         <tr>
                             <td colspan="3">
                                 <div class="TsoOpeningHours__Field__Label">
-                                    ${ labels.name }
+                                    ${ translate('editValid.name') }
                                 </div>
                                 <input
                                         name="name"
@@ -227,7 +227,7 @@ module.exports = ({ labels, weekdays, today, entries, errorClass, errorMessage }
                         <tr>
                             <td colspan="3">
                                 <div class="TsoOpeningHours__Field__Label">
-                                    ${ labels.description }
+                                    ${ translate('editValid.description') }
                                 </div>
                                 <textarea
                                         name="description"
@@ -242,7 +242,7 @@ module.exports = ({ labels, weekdays, today, entries, errorClass, errorMessage }
         `).join('') }
 
         <button class="TsoOpeningHours__Button TsoOpeningHours__Button--block" data-action="addSpecificGroup">
-            ${ labels.addSpecificEntry }
+            ${ translate('editValid.addSpecificEntry') }
         </button>
     </div>
     </div>
