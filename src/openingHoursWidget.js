@@ -518,8 +518,6 @@ module.exports = {
          * @returns {boolean}
          */
         const isValidData = (data) => {
-            return false;
-
             if (data === null || data === undefined) {
                 return true;
             }
