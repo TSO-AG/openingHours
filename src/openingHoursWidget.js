@@ -140,7 +140,7 @@ module.exports = {
                 });
 
                 // Weekday interactions
-                addEvent(modal, '[data-action="toggleWeekday"]', 'click', (event) => {
+                addEvent(modal, '[data-action="addWeekdayEntry"]', 'click', (event) => {
                     const dayOfWeek = event.target.closest('[data-day-of-week]')?.getAttribute('data-day-of-week');
                     const index = parseInt(event.target.closest('[data-index]')?.getAttribute('data-index'));
                     workingData[dayOfWeek] = [

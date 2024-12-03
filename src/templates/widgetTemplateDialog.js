@@ -149,6 +149,7 @@ module.exports = ({ weekdays, today, entries, errorClass, errorMessage, translat
                                 <label class="TsoOpeningHours__Switch">
                                     <input type="checkbox" name="closed" data-action="toggleSpecificGroup"
                                     ${ group.closed ? '' : 'checked' }
+                                    >
                                     <span></span>
                                 </label>
                                 <span class="TsoOpeningHours__Switch__Label">

@@ -96,14 +96,14 @@ module.exports = ({ isValid, isAnyWeekdayConfigured, readonly, translate, weekda
                                     <!-- Day of week -->
                                     ${ group.dayOfWeek ? `
                                         <div class="TsoOpeningHours__SpecificEntry__DayOfWeek">
-                                            (${ weekdays.find(weekday => group.dayOfWeek === weekday.value)?.label })
+                                            (${ translate(weekdays.find(weekday => group.dayOfWeek === weekday.value)?.labelKey) })
                                         </div>
                                     ` : '' }
                                 </div>
 
                                 <!-- Opening Hours -->
                                 <div class="TsoOpeningHours__SpecificEntry__OpeningHours">
-                                    ${ group.closed ? `
+                                    ${ !group.closed ? `
                                         <div class="TsoOpeningHours__SpecificEntry__OpeningHours__Entries">
                                             ${ group.entries.map(entry => `
                                                 <div class="TsoOpeningHours__SpecificEntry__OpeningHours__Entry">
