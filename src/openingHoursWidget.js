@@ -3,20 +3,25 @@ const widgetTemplateDialogInvalid = require('./templates/widgetTemplateDialogInv
 const widgetTemplateDialog = require('./templates/widgetTemplateDialog.js');
 const translations = require('./translations');
 
-module.exports = {
+const openingHoursWidget = {
+
+    availableLocales: Object.keys(translations),
+
     /**
-     * @param {Element} el The element to initialize the widget on
-     * @param value
-     * @param {boolean} readonly If the widget should be readonly
-     * @param onChange
-     * @param {"de_DE"|"en_US"|"fr_FR"|"it_IT"} locale
-     * @param {boolean} editInvalidJson
+     * @param {HTMLElement} el The element to initialize the widget on
+     * @param {Array|null|undefined} [value] Initial value of the widget
+     * @param {(value: Array) => void} [onChange] If the widget should be readonly
+     * @param {"de"|"en"|"fr"|"it"|string} [locale] Locale to use for the widget
+     * @param {"de"|"en"|"fr"|"it"} [fallbackLocale] Fallback locale to use if the given locale is not available
+     * @param {boolean} [readonly] If the widget should be readonly
+     * @param {boolean} [editInvalidJson] Enable the user to edit invalid JSON as raw JSON
      */
     initOpeningHoursWidget(el, {
-        value,
-        readonly,
-        onChange,
-        locale = 'en_US',
+        value = undefined,
+        onChange = undefined,
+        locale = 'en',
+        fallbackLocale = 'en',
+        readonly = false,
         editInvalidJson = false
     } = {}) {
 
@@ -59,6 +64,30 @@ module.exports = {
         ];
 
         let currentValue = value;
+
+        /** @var {"de"|"en"|"fr"|"it"} */
+        const localeToUse = (() => {
+            // Direct match
+            if (openingHoursWidget.availableLocales.includes(locale)) {
+                return locale;
+            }
+
+            // Partial match (only the language part)
+            const languageFromLocale = locale.split('_')[0];
+            const partialMatch = openingHoursWidget.availableLocales
+                .find(l => l.split('_')[0] === languageFromLocale);
+            if (partialMatch) {
+                return partialMatch;
+            }
+
+            // Fallback locale (if available)
+            if (openingHoursWidget.availableLocales.includes(fallbackLocale)) {
+                return fallbackLocale;
+            }
+
+            // Fallback
+            return 'en';
+        })();
 
         const render = () => {
             const isValid = isValidData(currentValue);
@@ -416,7 +445,10 @@ module.exports = {
 
         const setCurrentValue = (value) => {
             currentValue = value;
-            onChange(currentValue);
+
+            if (onChange) {
+                onChange(currentValue);
+            }
         }
 
         const getGroupedEntriesForDisplay = () => {
@@ -673,17 +705,17 @@ module.exports = {
 
         const translate = (key) => {
             const keyParts = key.split('.');
-            function findKeyInLocale (locale) {
+            function findKeyInLocale () {
                 return keyParts.reduce((acc, keyPart) => {
                     if (acc === undefined) {
                         return undefined;
                     }
 
                     return acc[keyPart];
-                }, translations[locale]);
+                }, translations[localeToUse]);
             }
 
-            return findKeyInLocale(locale) || key;
+            return findKeyInLocale() || key;
         }
 
         render();
@@ -692,3 +724,5 @@ module.exports = {
         }
     }
 }
+
+module.exports = openingHoursWidget;
