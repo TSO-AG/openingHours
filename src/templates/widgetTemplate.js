@@ -3,16 +3,16 @@ module.exports = ({ isValid, isAnyWeekdayConfigured, readonly, translate, weekda
     ${ !readonly ? `
         <div class="TsoOpeningHoursDisplay__ActionBar">
             ${ isValid ? `
-                <button class="TsoOpeningHours__Button TsoOpeningHours__Button--small" data-action="editData">
+                <button type="button" class="TsoOpeningHours__Button TsoOpeningHours__Button--small" data-action="editData">
                     ${ translate('view.edit') }
                 </button>
             ` : `
                 ${ editInvalidJson ? `
-                <button class="TsoOpeningHours__Button TsoOpeningHours__Button--small" data-action="editRawData">
+                <button type="button" class="TsoOpeningHours__Button TsoOpeningHours__Button--small" data-action="editRawData">
                     ${ translate('view.edit') }
                 </button>
                 ` : '' }
-                <button class="TsoOpeningHours__Button TsoOpeningHours__Button--small" data-action="resetData">
+                <button type="button" class="TsoOpeningHours__Button TsoOpeningHours__Button--small" data-action="resetData">
                     ${ translate('view.reset') }
                 </button>
             ` }
