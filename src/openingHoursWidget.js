@@ -465,8 +465,8 @@ const openingHoursWidget = {
                     if (!acc['specific'][groupCode]) {
                         acc['specific'][groupCode] = {
                             dayOfWeek: entry.dayOfWeek,
-                            validFrom: entry.validFrom,
-                            validThrough: entry.validThrough,
+                            validFrom: formatDate(entry.validFrom),
+                            validThrough: formatDate(entry.validThrough),
                             name: entry.name,
                             description: entry.description,
                             closed: !(entry.opens && entry.closes),
@@ -716,6 +716,18 @@ const openingHoursWidget = {
             }
 
             return findKeyInLocale() || key;
+        }
+
+        const formatDate = (date) => {
+            const dateObj = new Date(date);
+            if (isNaN(dateObj.getTime())) {
+                return date;
+            }
+            return dateObj.toLocaleDateString('de', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+            });
         }
 
         render();
