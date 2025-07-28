@@ -231,6 +231,28 @@ const openingHoursWidget = {
                     renderModal();
                 });
 
+                addEvent(modal, '[data-action="duplicateSpecificGroup"]', 'click', (event) => {
+                    const groupIndex = parseInt(event.target.closest('[data-group-index]')?.getAttribute('data-group-index'));
+                    
+                    // Get the group to duplicate
+                    const originalGroup = workingData.specific[groupIndex];
+                    
+                    // Create a deep copy of the group
+                    const duplicatedGroup = {
+                        ...originalGroup,
+                        // Deep copy the entries array
+                        entries: originalGroup.entries.map(entry => ({
+                            ...entry,
+                            data: { ...entry.data }
+                        }))
+                    };
+                    
+                    // Insert the duplicated group right after the original
+                    workingData.specific.splice(groupIndex + 1, 0, duplicatedGroup);
+                    
+                    renderModal();
+                });
+
                 addEvent(modal, '[data-action="addSpecificEntry"]', 'click', (event) => {
                     const groupIndex = parseInt(event.target.closest('[data-group-index]')?.getAttribute('data-group-index'));
                     const entryIndex = parseInt(event.target.closest('[data-entry-index]')?.getAttribute('data-entry-index'));

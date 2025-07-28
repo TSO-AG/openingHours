@@ -84,6 +84,8 @@ module.exports = ({ weekdays, today, entries, errorClass, errorMessage, translat
                         ${ translate('editValid.specificOpeningHour') }
                     </div>
                     <div>
+                    <button class="TsoOpeningHours__IconButton TsoOpeningHours__IconButton__Duplicate"
+                            data-action="duplicateSpecificGroup"></button>
                     <button class="TsoOpeningHours__IconButton TsoOpeningHours__IconButton__Remove"
                             data-action="removeSpecificGroup"></button>
                     </div>
