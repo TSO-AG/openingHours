@@ -668,9 +668,11 @@ const openingHoursWidget = {
 
         const workingDataToCurrentData = (workingData) => {
             const newData = [];
+            const specificEntries = [];
+
             Object.entries(workingData).forEach(([day, data]) => {
                 if (day === 'specific') {
-                    // Specific
+                    // Collect specific entries first
                     data.forEach((group) => {
                         group.entries.forEach((entry) => {
                             const mergedData = removeUndefinedValues({
@@ -685,7 +687,7 @@ const openingHoursWidget = {
                                 description: group.description,
                             })
 
-                            newData.push(mergedData);
+                            specificEntries.push(mergedData);
                         })
                     });
                     return;
@@ -702,6 +704,40 @@ const openingHoursWidget = {
                     newData.push(mergedData);
                 });
             });
+
+            // Sort specific entries by validFrom date
+            specificEntries.sort((a, b) => {
+                const dateA = a.validFrom || '';
+                const dateB = b.validFrom || '';
+
+                // First sort by validFrom
+                const dateComparison = dateA.localeCompare(dateB);
+                if (dateComparison !== 0) {
+                    return dateComparison;
+                }
+
+                // If dates are the same, sort by dayOfWeek
+                const dayOfWeekA = a.dayOfWeek || '';
+                const dayOfWeekB = b.dayOfWeek || '';
+
+                // Create a mapping of Schema.org URLs to week order
+                const dayOrder = {
+                    'https://schema.org/Monday': 1,
+                    'https://schema.org/Tuesday': 2,
+                    'https://schema.org/Wednesday': 3,
+                    'https://schema.org/Thursday': 4,
+                    'https://schema.org/Friday': 5,
+                    'https://schema.org/Saturday': 6,
+                    'https://schema.org/Sunday': 7
+                };
+
+                const orderA = dayOrder[dayOfWeekA] || 999; // Unknown days go to end
+                const orderB = dayOrder[dayOfWeekB] || 999;
+
+                return orderA - orderB;
+            });
+
+            newData.push(...specificEntries);
 
             return newData;
         };
