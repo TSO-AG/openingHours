@@ -2,10 +2,10 @@ module.exports = ({ weekdays, today, entries, errorClass, errorMessage, translat
 
     <!-- Actionbar -->
     <div class="TsoOpeningHoursSpecificationEditDialog__Actionbar">
-        <button class="TsoOpeningHours__Button TsoOpeningHours__Button--primary" data-action="save">
+        <button type="button" class="TsoOpeningHours__Button TsoOpeningHours__Button--primary" data-action="save">
             ${ translate('editValid.save') }
         </button>
-        <button class="TsoOpeningHours__CloseButton" data-action="close">
+        <button type="button" class="TsoOpeningHours__CloseButton" data-action="close">
             <svg viewBox="0 0 24 24" width="20" height="20"><g fill-rule="nonzero" stroke="currentColor" fill="none" stroke-linecap="round"><path d="M4 4l16 16M20 4L4 20"></path></g></svg>
         </button>
     </div>
@@ -56,11 +56,11 @@ module.exports = ({ weekdays, today, entries, errorClass, errorMessage, translat
                                         </td>
 
                                         <td class="align-center min-width">
-                                            <button class="TsoOpeningHours__IconButton TsoOpeningHours__IconButton__Remove"
+                                            <button type="button" class="TsoOpeningHours__IconButton TsoOpeningHours__IconButton__Remove"
                                                     data-action="removeWeekdayEntry">
                                             </button>
 
-                                            <button class="TsoOpeningHours__IconButton TsoOpeningHours__IconButton__Add"
+                                            <button type="button" class="TsoOpeningHours__IconButton TsoOpeningHours__IconButton__Add"
                                                     data-action="addWeekdayEntry">
                                             </button>
                                         </td>
@@ -84,9 +84,9 @@ module.exports = ({ weekdays, today, entries, errorClass, errorMessage, translat
                         ${ translate('editValid.specificOpeningHour') }
                     </div>
                     <div>
-                    <button class="TsoOpeningHours__IconButton TsoOpeningHours__IconButton__Duplicate"
+                    <button type="button" class="TsoOpeningHours__IconButton TsoOpeningHours__IconButton__Duplicate"
                             data-action="duplicateSpecificGroup"></button>
-                    <button class="TsoOpeningHours__IconButton TsoOpeningHours__IconButton__Remove"
+                    <button type="button" class="TsoOpeningHours__IconButton TsoOpeningHours__IconButton__Remove"
                             data-action="removeSpecificGroup"></button>
                     </div>
                 </div>
@@ -194,12 +194,12 @@ module.exports = ({ weekdays, today, entries, errorClass, errorMessage, translat
                                                     </td>
 
                                                     <td class="align-center min-width">
-                                                        <button class="TsoOpeningHours__IconButton TsoOpeningHours__IconButton__Remove"
+                                                        <button type="button" class="TsoOpeningHours__IconButton TsoOpeningHours__IconButton__Remove"
                                                                 data-action="removeSpecificEntry"
                                                                 ${ group.entries.length <= 1 ? 'disabled' : '' }>
                                                         </button>
 
-                                                        <button class="TsoOpeningHours__IconButton TsoOpeningHours__IconButton__Add"
+                                                        <button type="button" class="TsoOpeningHours__IconButton TsoOpeningHours__IconButton__Add"
                                                                 data-action="addSpecificEntry">
                                                         </button>
                                                     </td>
@@ -244,7 +244,7 @@ module.exports = ({ weekdays, today, entries, errorClass, errorMessage, translat
             </div>
         `).join('') }
 
-        <button class="TsoOpeningHours__Button TsoOpeningHours__Button--block" data-action="addSpecificGroup">
+        <button type="button" class="TsoOpeningHours__Button TsoOpeningHours__Button--block" data-action="addSpecificGroup">
             ${ translate('editValid.addSpecificEntry') }
         </button>
     </div>
