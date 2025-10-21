@@ -1,4 +1,7 @@
 # openingHours
+openingHours Repository liefert ein schlichtes, aber nützliches JavaScript-Widget zur interaktiven Verwaltung von Öffnungszeiten in Webanwendungen. Es ist mehrsprachig, flexibel, einfach integrierbar und ideal für dynamische Eingabemasken geeignet.
+
+![alt text](https://github.com/TSO-AG/openingHours/blob/main/example.jpg?raw=true)
 
 ## Example
 ```html

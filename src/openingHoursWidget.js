@@ -231,6 +231,28 @@ const openingHoursWidget = {
                     renderModal();
                 });
 
+                addEvent(modal, '[data-action="duplicateSpecificGroup"]', 'click', (event) => {
+                    const groupIndex = parseInt(event.target.closest('[data-group-index]')?.getAttribute('data-group-index'));
+                    
+                    // Get the group to duplicate
+                    const originalGroup = workingData.specific[groupIndex];
+                    
+                    // Create a deep copy of the group
+                    const duplicatedGroup = {
+                        ...originalGroup,
+                        // Deep copy the entries array
+                        entries: originalGroup.entries.map(entry => ({
+                            ...entry,
+                            data: { ...entry.data }
+                        }))
+                    };
+                    
+                    // Insert the duplicated group right after the original
+                    workingData.specific.splice(groupIndex + 1, 0, duplicatedGroup);
+                    
+                    renderModal();
+                });
+
                 addEvent(modal, '[data-action="addSpecificEntry"]', 'click', (event) => {
                     const groupIndex = parseInt(event.target.closest('[data-group-index]')?.getAttribute('data-group-index'));
                     const entryIndex = parseInt(event.target.closest('[data-entry-index]')?.getAttribute('data-entry-index'));
@@ -465,8 +487,8 @@ const openingHoursWidget = {
                     if (!acc['specific'][groupCode]) {
                         acc['specific'][groupCode] = {
                             dayOfWeek: entry.dayOfWeek,
-                            validFrom: entry.validFrom,
-                            validThrough: entry.validThrough,
+                            validFrom: formatDate(entry.validFrom),
+                            validThrough: formatDate(entry.validThrough),
                             name: entry.name,
                             description: entry.description,
                             closed: !(entry.opens && entry.closes),
@@ -646,9 +668,11 @@ const openingHoursWidget = {
 
         const workingDataToCurrentData = (workingData) => {
             const newData = [];
+            const specificEntries = [];
+
             Object.entries(workingData).forEach(([day, data]) => {
                 if (day === 'specific') {
-                    // Specific
+                    // Collect specific entries first
                     data.forEach((group) => {
                         group.entries.forEach((entry) => {
                             const mergedData = removeUndefinedValues({
@@ -663,7 +687,7 @@ const openingHoursWidget = {
                                 description: group.description,
                             })
 
-                            newData.push(mergedData);
+                            specificEntries.push(mergedData);
                         })
                     });
                     return;
@@ -680,6 +704,40 @@ const openingHoursWidget = {
                     newData.push(mergedData);
                 });
             });
+
+            // Sort specific entries by validFrom date
+            specificEntries.sort((a, b) => {
+                const dateA = a.validFrom || '';
+                const dateB = b.validFrom || '';
+
+                // First sort by validFrom
+                const dateComparison = dateA.localeCompare(dateB);
+                if (dateComparison !== 0) {
+                    return dateComparison;
+                }
+
+                // If dates are the same, sort by dayOfWeek
+                const dayOfWeekA = a.dayOfWeek || '';
+                const dayOfWeekB = b.dayOfWeek || '';
+
+                // Create a mapping of Schema.org URLs to week order
+                const dayOrder = {
+                    'https://schema.org/Monday': 1,
+                    'https://schema.org/Tuesday': 2,
+                    'https://schema.org/Wednesday': 3,
+                    'https://schema.org/Thursday': 4,
+                    'https://schema.org/Friday': 5,
+                    'https://schema.org/Saturday': 6,
+                    'https://schema.org/Sunday': 7
+                };
+
+                const orderA = dayOrder[dayOfWeekA] || 999; // Unknown days go to end
+                const orderB = dayOrder[dayOfWeekB] || 999;
+
+                return orderA - orderB;
+            });
+
+            newData.push(...specificEntries);
 
             return newData;
         };
@@ -716,6 +774,18 @@ const openingHoursWidget = {
             }
 
             return findKeyInLocale() || key;
+        }
+
+        const formatDate = (date) => {
+            const dateObj = new Date(date);
+            if (isNaN(dateObj.getTime())) {
+                return date;
+            }
+            return dateObj.toLocaleDateString('de', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+            });
         }
 
         render();
