@@ -25,6 +25,7 @@ module.exports = {
         closed: 'Geschlossen',
         opens: 'Öffnet',
         closes: 'Schließt',
+        open24h: '24h geöffnet',
         name: 'Name',
         description: 'Beschreibung',
         specificOpeningHour: 'Spezielle Öffnungszeiten',
