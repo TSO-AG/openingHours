@@ -209,6 +209,29 @@ const openingHoursWidget = {
                     const value = event.target.value;
                     const name = event.target.getAttribute('name');
                     workingData[dayOfWeek][index].data[name] = value;
+                    // Update is24h flag based on new values
+                    workingData[dayOfWeek][index].is24h = is24hOpen(workingData[dayOfWeek][index].data);
+                });
+
+                // Toggle 24h for weekdays
+                addEvent(modal, '.TsoOpeningHours__Weekdays [data-action="toggle24h"]', 'click', (event) => {
+                    const dayOfWeek = event.target.closest('[data-day-of-week]')?.getAttribute('data-day-of-week');
+                    const index = parseInt(event.target.closest('[data-index]')?.getAttribute('data-index'));
+                    const is24h = event.target.checked;
+
+                    if (is24h) {
+                        workingData[dayOfWeek][index].data.opens = '00:00';
+                        workingData[dayOfWeek][index].data.closes = '23:59';
+                        workingData[dayOfWeek][index].is24h = true;
+                    } else {
+                        // Reset to empty or keep current values if not 24h
+                        if (workingData[dayOfWeek][index].is24h) {
+                            workingData[dayOfWeek][index].data.opens = '';
+                            workingData[dayOfWeek][index].data.closes = '';
+                        }
+                        workingData[dayOfWeek][index].is24h = false;
+                    }
+                    renderModal();
                 });
 
                 // Specific opening hours interactions
@@ -302,10 +325,34 @@ const openingHoursWidget = {
 
                     if (isEmptyValue) {
                         delete workingData.specific[groupIndex].entries[entryIndex].data[name];
+                        workingData.specific[groupIndex].entries[entryIndex].is24h = is24hOpen(workingData.specific[groupIndex].entries[entryIndex].data);
                         return;
                     }
 
                     workingData.specific[groupIndex].entries[entryIndex].data[name] = value;
+                    // Update is24h flag based on new values
+                    workingData.specific[groupIndex].entries[entryIndex].is24h = is24hOpen(workingData.specific[groupIndex].entries[entryIndex].data);
+                });
+
+                // Toggle 24h for specific opening hours
+                addEvent(modal, '.TsoOpeningHours__SpecificEntries [data-action="toggle24hSpecific"]', 'click', (event) => {
+                    const groupIndex = parseInt(event.target.closest('[data-group-index]')?.getAttribute('data-group-index'));
+                    const entryIndex = parseInt(event.target.closest('[data-entry-index]')?.getAttribute('data-entry-index'));
+                    const is24h = event.target.checked;
+
+                    if (is24h) {
+                        workingData.specific[groupIndex].entries[entryIndex].data.opens = '00:00';
+                        workingData.specific[groupIndex].entries[entryIndex].data.closes = '23:59';
+                        workingData.specific[groupIndex].entries[entryIndex].is24h = true;
+                    } else {
+                        // Reset to empty or keep current values if not 24h
+                        if (workingData.specific[groupIndex].entries[entryIndex].is24h) {
+                            workingData.specific[groupIndex].entries[entryIndex].data.opens = '';
+                            workingData.specific[groupIndex].entries[entryIndex].data.closes = '';
+                        }
+                        workingData.specific[groupIndex].entries[entryIndex].is24h = false;
+                    }
+                    renderModal();
                 });
 
 
@@ -360,11 +407,14 @@ const openingHoursWidget = {
                             // Entry validation
                             group.entries.forEach((entry, entryIndex) => {
                                 const entryErrors = {};
-                                if (!entry.data.opens) {
-                                    entryErrors.opens = 'Pflichtfeld';
-                                }
-                                if (!entry.data.closes) {
-                                    entryErrors.closes = 'Pflichtfeld';
+                                // Skip validation for 24h entries (they are auto-filled)
+                                if (!entry.is24h) {
+                                    if (!entry.data.opens) {
+                                        entryErrors.opens = 'Pflichtfeld';
+                                    }
+                                    if (!entry.data.closes) {
+                                        entryErrors.closes = 'Pflichtfeld';
+                                    }
                                 }
 
                                 if (Object.values(entryErrors).length) {
@@ -390,11 +440,14 @@ const openingHoursWidget = {
                 } else {
                     data.forEach((entry, index) => {
                         const entryErrors = {};
-                        if (!entry.data.opens) {
-                            entryErrors.opens = 'Pflichtfeld';
-                        }
-                        if (!entry.data.closes) {
-                            entryErrors.closes = 'Pflichtfeld';
+                        // Skip validation for 24h entries (they are auto-filled)
+                        if (!entry.is24h) {
+                            if (!entry.data.opens) {
+                                entryErrors.opens = 'Pflichtfeld';
+                            }
+                            if (!entry.data.closes) {
+                                entryErrors.closes = 'Pflichtfeld';
+                            }
                         }
 
                         // Build error object
@@ -643,6 +696,7 @@ const openingHoursWidget = {
                                 opens: entry.opens,
                                 closes: entry.closes,
                             },
+                            is24h: is24hOpen(entry),
                             originalIndex: index
                         });
                     } else {
@@ -652,6 +706,7 @@ const openingHoursWidget = {
                                 opens: entry.opens,
                                 closes: entry.closes,
                             },
+                            is24h: is24hOpen(entry),
                             originalIndex: index
                         });
                     }
@@ -786,6 +841,18 @@ const openingHoursWidget = {
                 month: '2-digit',
                 day: '2-digit',
             });
+        }
+
+        /**
+         * Check if an entry represents 24h opening (00:00 - 23:59)
+         * @param {object} entry - Entry with opens and closes properties
+         * @returns {boolean}
+         */
+        const is24hOpen = (entry) => {
+            if (!entry) return false;
+            const opens = entry.opens || (entry.data && entry.data.opens);
+            const closes = entry.closes || (entry.data && entry.data.closes);
+            return opens === '00:00' && closes === '23:59';
         }
 
         render();

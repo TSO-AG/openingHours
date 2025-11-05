@@ -36,22 +36,34 @@ module.exports = ({ weekdays, today, entries, errorClass, errorMessage, translat
                                     <th>${ translate('editValid.closes') }</th>
                                     <th></th>
                                 </tr>
-                                ${ entries[weekday.key].map(({ data: entry }, index) => `
+                                ${ entries[weekday.key].map(({ data: entry, is24h }, index) => `
                                     <tr data-index="${ index }">
                                         <td>
                                             <input name="opens"
                                                    class="TsoOpeningHours__Field ${ errorClass(weekday.key, index, 'opens') }"
                                                    type="time"
                                                    ${ entry.opens !== undefined ? `value="${entry.opens}"` : '' }
-                                                   style="width: 100%;"/>
+                                                   ${ is24h ? 'readonly style="width: 100%; opacity: 0.6;"' : 'style="width: 100%;"' }/>
                                            ${ errorMessage(weekday.key, index, 'opens') }
+                                           <div style="margin-top: 4px;">
+                                               <label class="TsoOpeningHours__Switch" style="margin: 0;">
+                                                    <input type="checkbox"
+                                                           name="is24h"
+                                                           data-action="toggle24h"
+                                                           ${ is24h ? 'checked' : '' }>
+                                                    <span></span>
+                                                </label>
+                                                <span class="TsoOpeningHours__Switch__Label" style="font-size: 11px;">
+                                                    ${ translate('editValid.open24h') }
+                                                </span>
+                                           </div>
                                         </td>
                                         <td>
                                             <input name="closes"
                                                    class="TsoOpeningHours__Field ${ errorClass(weekday.key, index, 'closes') }"
                                                    type="time"
                                                    ${ entry.closes !== undefined ? `value="${entry.closes}"` : '' }
-                                                   style="width: 100%;"/>
+                                                   ${ is24h ? 'readonly style="width: 100%; opacity: 0.6;"' : 'style="width: 100%;"' }/>
                                            ${ errorMessage(weekday.key, index, 'closes') }
                                         </td>
 
@@ -113,7 +125,7 @@ module.exports = ({ weekdays, today, entries, errorClass, errorMessage, translat
                                     `).join('') }
                                 </select>
                             </td>
-                            <td>
+                            <td style="width: 50%;">
                                 <div class="TsoOpeningHours__Field__Label">
                                     ${ translate('editValid.validFrom') }
                                 </div>
@@ -128,7 +140,7 @@ module.exports = ({ weekdays, today, entries, errorClass, errorMessage, translat
 
                                 ${ errorMessage('specific', groupIndex, 'validFrom') }
                             </td>
-                            <td>
+                            <td style="width: 50%;">
                                 <div class="TsoOpeningHours__Field__Label">
                                     ${ translate('editValid.validThrough') }
                                 </div>
@@ -159,57 +171,75 @@ module.exports = ({ weekdays, today, entries, errorClass, errorMessage, translat
                                 </span>
                             </td>
                             <td colspan="2">
-                                ${ !group.closed ? `
-                                    <table style="width: 100%">
-                                        <thead>
-                                        <tr>
-                                            <th class="TsoOpeningHours__Field__Label">${ translate('editValid.opens') }</th>
-                                            <th class="TsoOpeningHours__Field__Label">${ translate('editValid.closes') }</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                            ${ group.entries.map(({ data }, entryIndex) => `
-                                                <tr data-entry-index="${ entryIndex }">
-                                                    <td>
-                                                        <input
-                                                                name="opens"
-                                                                class="TsoOpeningHours__Field ${ errorClass('specific', [groupIndex, entryIndex], 'opens') }"
-                                                                type="time"
-                                                                style="width: 100%;"
-                                                                ${ data.opens ? `value="${ data.opens }"` : '' }
-                                                        />
-                                                        
-                                                        ${ errorMessage('specific', [groupIndex, entryIndex], 'opens') }
-                                                    </td>
-                                                    <td>
-                                                        <input
-                                                                name="closes"
-                                                                class="TsoOpeningHours__Field ${ errorClass('specific', [groupIndex, entryIndex], 'closes') }"
-                                                                type="time"
-                                                                style="width: 100%;"
-                                                                ${ data.closes ? `value="${ data.closes }"` : '' }
-                                                        />
-                                                        
-                                                        ${ errorMessage('specific', [groupIndex, entryIndex], 'closes') }
-                                                    </td>
-
-                                                    <td class="align-center min-width">
-                                                        <button class="TsoOpeningHours__IconButton TsoOpeningHours__IconButton__Remove"
-                                                                data-action="removeSpecificEntry"
-                                                                ${ group.entries.length <= 1 ? 'disabled' : '' }>
-                                                        </button>
-
-                                                        <button class="TsoOpeningHours__IconButton TsoOpeningHours__IconButton__Add"
-                                                                data-action="addSpecificEntry">
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            `).join('') }
-                                        </tbody>
-                                    </table>
-                                ` : '' }
                             </td>
                         </tr>
+
+                        <!-- Zeiteinträge -->
+                        ${ !group.closed ? `
+                        <tr>
+                            <td colspan="3">
+                                <table style="width: 100%">
+                                    <thead>
+                                    <tr>
+                                        <th class="TsoOpeningHours__Field__Label">${ translate('editValid.opens') }</th>
+                                        <th class="TsoOpeningHours__Field__Label">${ translate('editValid.closes') }</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${ group.entries.map(({ data, is24h }, entryIndex) => `
+                                            <tr data-entry-index="${ entryIndex }">
+                                                <td>
+                                                    <input
+                                                            name="opens"
+                                                            class="TsoOpeningHours__Field ${ errorClass('specific', [groupIndex, entryIndex], 'opens') }"
+                                                            type="time"
+                                                            ${ data.opens ? `value="${ data.opens }"` : '' }
+                                                            ${ is24h ? 'readonly style="width: 100%; opacity: 0.6;"' : 'style="width: 100%;"' }
+                                                    />
+
+                                                    ${ errorMessage('specific', [groupIndex, entryIndex], 'opens') }
+                                                    <div style="margin-top: 4px;">
+                                                        <label class="TsoOpeningHours__Switch" style="margin: 0;">
+                                                            <input type="checkbox"
+                                                                   name="is24h"
+                                                                   data-action="toggle24hSpecific"
+                                                                   ${ is24h ? 'checked' : '' }>
+                                                            <span></span>
+                                                        </label>
+                                                        <span class="TsoOpeningHours__Switch__Label" style="font-size: 11px;">
+                                                            ${ translate('editValid.open24h') }
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <input
+                                                            name="closes"
+                                                            class="TsoOpeningHours__Field ${ errorClass('specific', [groupIndex, entryIndex], 'closes') }"
+                                                            type="time"
+                                                            ${ data.closes ? `value="${ data.closes }"` : '' }
+                                                            ${ is24h ? 'readonly style="width: 100%; opacity: 0.6;"' : 'style="width: 100%;"' }
+                                                    />
+
+                                                    ${ errorMessage('specific', [groupIndex, entryIndex], 'closes') }
+                                                </td>
+                                                <td class="align-center min-width">
+                                                    <button class="TsoOpeningHours__IconButton TsoOpeningHours__IconButton__Remove"
+                                                            data-action="removeSpecificEntry"
+                                                            ${ group.entries.length <= 1 ? 'disabled' : '' }>
+                                                    </button>
+
+                                                    <button class="TsoOpeningHours__IconButton TsoOpeningHours__IconButton__Add"
+                                                            data-action="addSpecificEntry">
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        `).join('') }
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        ` : '' }
                         <!-- Name -->
                         <tr>
                             <td colspan="3">
