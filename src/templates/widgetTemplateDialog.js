@@ -14,19 +14,38 @@ module.exports = ({ weekdays, today, entries, errorClass, errorMessage, translat
         <!-- Weekdays -->
         <table class="TsoOpeningHours__Weekdays">
             <tbody>
-            ${ weekdays.map(weekday => `
+            ${ weekdays.map(weekday => {
+                const is24h = entries[weekday.key].length > 0 && entries[weekday.key][0].is24h;
+                return `
                 <tr class="TsoOpeningHours__Weekday" data-day-of-week="${ weekday.key }">
                     <td class="min-width">
                         <div class="TsoOpeningHours__Weekday__Headline">${ translate(weekday.labelKey) }</div>
-                        <label class="TsoOpeningHours__Switch">
-                            <input type="checkbox" name="closed" data-action="toggleWeekday"
-                            ${ entries[weekday.key].length ? 'checked' : '' }
-                            >
-                            <span></span>
-                        </label>
-                        <span class="TsoOpeningHours__Switch__Label">
-                            ${ entries[weekday.key].length === 0 ? translate('editValid.closed') : translate('editValid.open') }
-                        </span>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <div>
+                                <label class="TsoOpeningHours__Switch">
+                                    <input type="checkbox" name="closed" data-action="toggleWeekday"
+                                    ${ entries[weekday.key].length ? 'checked' : '' }
+                                    >
+                                    <span></span>
+                                </label>
+                                <span class="TsoOpeningHours__Switch__Label">
+                                    ${ entries[weekday.key].length === 0 ? translate('editValid.closed') : translate('editValid.open') }
+                                </span>
+                            </div>
+                            ${ entries[weekday.key].length > 0 ? `
+                            <div>
+                                <label class="TsoOpeningHours__Switch">
+                                    <input type="checkbox" name="is24h" data-action="toggle24h"
+                                    ${ is24h ? 'checked' : '' }
+                                    >
+                                    <span></span>
+                                </label>
+                                <span class="TsoOpeningHours__Switch__Label">
+                                    ${ translate('editValid.open24h') }
+                                </span>
+                            </div>
+                            ` : '' }
+                        </div>
                     </td>
                     <td>
                         ${ entries[weekday.key].length > 0 ? `
@@ -45,18 +64,6 @@ module.exports = ({ weekdays, today, entries, errorClass, errorMessage, translat
                                                    ${ entry.opens !== undefined ? `value="${entry.opens}"` : '' }
                                                    ${ is24h ? 'readonly style="width: 100%; opacity: 0.6;"' : 'style="width: 100%;"' }/>
                                            ${ errorMessage(weekday.key, index, 'opens') }
-                                           <div style="margin-top: 4px;">
-                                               <label class="TsoOpeningHours__Switch" style="margin: 0;">
-                                                    <input type="checkbox"
-                                                           name="is24h"
-                                                           data-action="toggle24h"
-                                                           ${ is24h ? 'checked' : '' }>
-                                                    <span></span>
-                                                </label>
-                                                <span class="TsoOpeningHours__Switch__Label" style="font-size: 11px;">
-                                                    ${ translate('editValid.open24h') }
-                                                </span>
-                                           </div>
                                         </td>
                                         <td>
                                             <input name="closes"
@@ -69,11 +76,13 @@ module.exports = ({ weekdays, today, entries, errorClass, errorMessage, translat
 
                                         <td class="align-center min-width">
                                             <button class="TsoOpeningHours__IconButton TsoOpeningHours__IconButton__Remove"
-                                                    data-action="removeWeekdayEntry">
+                                                    data-action="removeWeekdayEntry"
+                                                    ${ is24h ? 'disabled' : '' }>
                                             </button>
 
                                             <button class="TsoOpeningHours__IconButton TsoOpeningHours__IconButton__Add"
-                                                    data-action="addWeekdayEntry">
+                                                    data-action="addWeekdayEntry"
+                                                    ${ is24h ? 'disabled' : '' }>
                                             </button>
                                         </td>
                                     </tr>
@@ -82,7 +91,7 @@ module.exports = ({ weekdays, today, entries, errorClass, errorMessage, translat
                         ` : '' }
                     </td>
                 </tr>
-            `).join('') }
+            `}).join('') }
         </table>
 
         <!-- Specific -->
@@ -160,15 +169,32 @@ module.exports = ({ weekdays, today, entries, errorClass, errorMessage, translat
                         <!-- Öffnungszeiten -->
                         <tr>
                             <td class="TsoOpeningHours__SpecificEntry__OpenSwitch">
-                                <label class="TsoOpeningHours__Switch">
-                                    <input type="checkbox" name="closed" data-action="toggleSpecificGroup"
-                                    ${ group.closed ? '' : 'checked' }
-                                    >
-                                    <span></span>
-                                </label>
-                                <span class="TsoOpeningHours__Switch__Label">
-                                    ${ group.closed ? translate('editValid.closed') : translate('editValid.open') }
-                                </span>
+                                <div style="display: flex; flex-direction: column; gap: 8px;">
+                                    <div>
+                                        <label class="TsoOpeningHours__Switch">
+                                            <input type="checkbox" name="closed" data-action="toggleSpecificGroup"
+                                            ${ group.closed ? '' : 'checked' }
+                                            >
+                                            <span></span>
+                                        </label>
+                                        <span class="TsoOpeningHours__Switch__Label">
+                                            ${ group.closed ? translate('editValid.closed') : translate('editValid.open') }
+                                        </span>
+                                    </div>
+                                    ${ !group.closed ? `
+                                    <div>
+                                        <label class="TsoOpeningHours__Switch">
+                                            <input type="checkbox" name="is24h" data-action="toggle24hSpecific"
+                                            ${ group.entries.length > 0 && group.entries[0].is24h ? 'checked' : '' }
+                                            >
+                                            <span></span>
+                                        </label>
+                                        <span class="TsoOpeningHours__Switch__Label">
+                                            ${ translate('editValid.open24h') }
+                                        </span>
+                                    </div>
+                                    ` : '' }
+                                </div>
                             </td>
                             <td colspan="2">
                             </td>
@@ -199,18 +225,6 @@ module.exports = ({ weekdays, today, entries, errorClass, errorMessage, translat
                                                     />
 
                                                     ${ errorMessage('specific', [groupIndex, entryIndex], 'opens') }
-                                                    <div style="margin-top: 4px;">
-                                                        <label class="TsoOpeningHours__Switch" style="margin: 0;">
-                                                            <input type="checkbox"
-                                                                   name="is24h"
-                                                                   data-action="toggle24hSpecific"
-                                                                   ${ is24h ? 'checked' : '' }>
-                                                            <span></span>
-                                                        </label>
-                                                        <span class="TsoOpeningHours__Switch__Label" style="font-size: 11px;">
-                                                            ${ translate('editValid.open24h') }
-                                                        </span>
-                                                    </div>
                                                 </td>
                                                 <td>
                                                     <input
@@ -226,11 +240,12 @@ module.exports = ({ weekdays, today, entries, errorClass, errorMessage, translat
                                                 <td class="align-center min-width">
                                                     <button class="TsoOpeningHours__IconButton TsoOpeningHours__IconButton__Remove"
                                                             data-action="removeSpecificEntry"
-                                                            ${ group.entries.length <= 1 ? 'disabled' : '' }>
+                                                            ${ is24h || group.entries.length <= 1 ? 'disabled' : '' }>
                                                     </button>
 
                                                     <button class="TsoOpeningHours__IconButton TsoOpeningHours__IconButton__Add"
-                                                            data-action="addSpecificEntry">
+                                                            data-action="addSpecificEntry"
+                                                            ${ is24h ? 'disabled' : '' }>
                                                     </button>
                                                 </td>
                                             </tr>
