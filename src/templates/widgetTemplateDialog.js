@@ -134,7 +134,7 @@ module.exports = ({ weekdays, today, entries, errorClass, errorMessage, translat
                                     `).join('') }
                                 </select>
                             </td>
-                            <td style="width: 50%;">
+                            <td>
                                 <div class="TsoOpeningHours__Field__Label">
                                     ${ translate('editValid.validFrom') }
                                 </div>
@@ -149,7 +149,7 @@ module.exports = ({ weekdays, today, entries, errorClass, errorMessage, translat
 
                                 ${ errorMessage('specific', groupIndex, 'validFrom') }
                             </td>
-                            <td style="width: 50%;">
+                            <td>
                                 <div class="TsoOpeningHours__Field__Label">
                                     ${ translate('editValid.validThrough') }
                                 </div>
